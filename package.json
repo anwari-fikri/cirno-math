@@ -11,6 +11,8 @@
   "dependencies": {
     "@headlessui/react": "^1.7.17",
     "@heroicons/react": "^2.0.18",
+    "mobx": "^6.10.2",
+    "mobx-react": "^9.0.1",
     "next": "13.5.4",
     "react": "^18",
     "react-dom": "^18"

@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
+import ConfigMenu from "./components/ConfigMenu";
 
 export default function Home() {
     const [firstNumber, setFirstNumber] = useState<number>(0);
@@ -24,8 +25,9 @@ export default function Home() {
     };
 
     return (
-        <div>
-            <p>
+        <div className="h-screen flex flex-col justify-center items-center gap-5">
+            <ConfigMenu />
+            <p className="text-center text-4xl font-extrabold sm:text-5xl lg:text-6xl">
                 {firstNumber} {operation} {secondNumber}
             </p>
             <div>
