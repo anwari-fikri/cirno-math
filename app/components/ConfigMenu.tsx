@@ -17,6 +17,16 @@ const ConfigMenu = observer(() => {
                     state={ConfigStore.isSubtract}
                     action={ConfigStore.handleToggleSubtract}
                 />
+                <ToggleOperation
+                    operation="× Multiplication"
+                    state={ConfigStore.isMultiplication}
+                    action={ConfigStore.handleToggleMultiplication}
+                />
+                <ToggleOperation
+                    operation="÷ Division"
+                    state={ConfigStore.isDivision}
+                    action={ConfigStore.handleToggleDivision}
+                />
             </div>
         </div>
     );

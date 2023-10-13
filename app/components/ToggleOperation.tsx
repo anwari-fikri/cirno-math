@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import { observer } from "mobx-react";
-import ConfigStore from "../interfaces/ConfigStore";
 
 const ToggleOperation = observer(
     ({
@@ -22,12 +21,6 @@ const ToggleOperation = observer(
                 onClick={() => {
                     setEnabled(!enabled);
                     action();
-                    console.log(operation, enabled);
-                    console.log(
-                        "store",
-                        ConfigStore.isAdd,
-                        ConfigStore.isSubtract
-                    );
                 }}
             >
                 <p>{operation}</p>
