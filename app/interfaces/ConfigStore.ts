@@ -1,7 +1,7 @@
-import { makeObservable, observable } from "mobx";
+import { makeObservable, observable, runInAction } from "mobx";
 
 class ConfigStore {
-    isAdd: boolean = false;
+    isAdd: boolean = true;
     isSubtract: boolean = false;
 
     constructor() {
@@ -10,6 +10,18 @@ class ConfigStore {
             isSubtract: observable,
         });
     }
+
+    handleToggleAdd = async () => {
+        runInAction(() => {
+            this.isAdd = !this.isAdd;
+        });
+    };
+
+    handleToggleSubtract = async () => {
+        runInAction(() => {
+            this.isSubtract = !this.isSubtract;
+        });
+    };
 }
 
 export default new ConfigStore();
