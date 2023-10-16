@@ -4,6 +4,7 @@ import React, { useState, useEffect } from "react";
 import ConfigMenu from "./components/ConfigMenu";
 import ConfigStore from "./interfaces/ConfigStore";
 import { observer } from "mobx-react";
+import useCountdown from "./components/useCountdown";
 
 const Home = observer(() => {
     const [isStart, setIsStart] = useState<boolean>(false);
@@ -11,6 +12,14 @@ const Home = observer(() => {
     const [secondNumber, setSecondNumber] = useState<number>(0);
     const [operation, setOperation] = useState<"+" | "-" | "x" | "÷">("+");
     const [answer, setAnswer] = useState<number>(0);
+    const [score, setScore] = useState<number>(-1);
+
+    const { secondsLeft, countdownEnd, startCountdown } = useCountdown();
+
+    const handleRestartButton = () => {
+        setIsStart(false);
+        setScore(-1);
+    };
 
     const handleAnswerChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const userAnswer = Number(e.target.value);
@@ -20,6 +29,7 @@ const Home = observer(() => {
             setIsStart(true);
             ConfigStore.handleChooseOperation();
             setOperation(ConfigStore.selectedOperation);
+            startCountdown(30);
         }
 
         let correctAnswer: number;
@@ -46,6 +56,7 @@ const Home = observer(() => {
             ConfigStore.handleChooseOperation();
             const newOperation = ConfigStore.selectedOperation; // Update the operation first
             setOperation(newOperation);
+            setScore((prevScore) => prevScore + 1);
             var newFirstNumber, newSecondNumber;
             switch (newOperation) {
                 case "+":
@@ -78,20 +89,39 @@ const Home = observer(() => {
 
     return (
         <div className="h-screen flex flex-col justify-center items-center gap-5">
-            <ConfigMenu />
-            <p className="text-center text-4xl font-extrabold sm:text-5xl lg:text-6xl">
-                {!isStart
-                    ? "Press 0 to start"
-                    : `${firstNumber} ${operation} ${secondNumber}`}
-            </p>
-            <div>
-                <input
-                    className="text-black"
-                    type="text"
-                    value={answer}
-                    onChange={handleAnswerChange}
-                />
-            </div>
+            {!isStart && <ConfigMenu />}
+            {secondsLeft > 0 && <p>{secondsLeft}</p>}
+
+            {countdownEnd != isStart && (
+                <>
+                    <p className="text-center text-4xl font-extrabold sm:text-5xl lg:text-6xl">
+                        {!isStart
+                            ? "Press 0 to start"
+                            : `${firstNumber} ${operation} ${secondNumber}`}
+                    </p>
+                    <div>
+                        <input
+                            className="text-black"
+                            type="text"
+                            value={answer}
+                            onChange={handleAnswerChange}
+                        />
+                    </div>
+                </>
+            )}
+
+            {isStart && countdownEnd && (
+                <>
+                    <p>Mode: {ConfigStore.availableOperations}</p>
+                    <p>Score: {score}</p>
+                    <button
+                        onClick={handleRestartButton}
+                        className="p-2 outline hover:bg-white hover:text-black"
+                    >
+                        Restart
+                    </button>
+                </>
+            )}
         </div>
     );
 });

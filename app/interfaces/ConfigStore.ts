@@ -6,7 +6,7 @@ class ConfigStore {
     isMultiplication: boolean = false;
     isDivision: boolean = false;
 
-    availableOperations: ("+" | "-" | "x" | "÷")[] = [];
+    availableOperations: ("+" | "-" | "x" | "÷")[] = ["+"];
     selectedOperation: "+" | "-" | "x" | "÷" = "+";
 
     constructor() {
