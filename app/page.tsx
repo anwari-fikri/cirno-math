@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import ConfigMenu from "./components/ConfigMenu";
 import ConfigStore from "./interfaces/ConfigStore";
 import { observer } from "mobx-react";
@@ -29,7 +29,7 @@ const Home = observer(() => {
             setIsStart(true);
             ConfigStore.handleChooseOperation();
             setOperation(ConfigStore.selectedOperation);
-            startCountdown(30);
+            startCountdown(ConfigStore.playTimer);
         }
 
         let correctAnswer: number;
@@ -54,11 +54,11 @@ const Home = observer(() => {
 
         if (userAnswer === correctAnswer) {
             ConfigStore.handleChooseOperation();
-            const newOperation = ConfigStore.selectedOperation; // Update the operation first
-            setOperation(newOperation);
+
+            setOperation(ConfigStore.selectedOperation);
             setScore((prevScore) => prevScore + 1);
             var newFirstNumber, newSecondNumber;
-            switch (newOperation) {
+            switch (ConfigStore.selectedOperation) {
                 case "+":
                     newFirstNumber = generateNewNumber(10, 99);
                     newSecondNumber = generateNewNumber(10, 99);

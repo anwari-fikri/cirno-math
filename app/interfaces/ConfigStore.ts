@@ -1,13 +1,14 @@
 import { makeObservable, observable, runInAction, action } from "mobx";
 
 class ConfigStore {
+    availableOperations: ("+" | "-" | "x" | "÷")[] = ["+"];
+    selectedOperation: "+" | "-" | "x" | "÷" = "+";
     isAdd: boolean = true;
     isSubtract: boolean = false;
     isMultiplication: boolean = false;
     isDivision: boolean = false;
 
-    availableOperations: ("+" | "-" | "x" | "÷")[] = ["+"];
-    selectedOperation: "+" | "-" | "x" | "÷" = "+";
+    playTimer: 30 | 60 | 120 = 30; // seconds
 
     constructor() {
         makeObservable(this, {
@@ -18,6 +19,9 @@ class ConfigStore {
             availableOperations: observable,
             selectedOperation: observable,
             handleChooseOperation: action,
+
+            playTimer: observable,
+            handleSetPlayTimer: action,
         });
     }
 
@@ -44,8 +48,11 @@ class ConfigStore {
         if (this.isDivision) this.availableOperations.push("÷");
 
         this.handleChooseOperation();
-        console.log("config_operation", this.selectedOperation);
     };
+
+    handleSetPlayTimer(input: 30 | 60 | 120) {
+        this.playTimer = input;
+    }
 
     handleToggleAdd = async () => {
         runInAction(() => {
