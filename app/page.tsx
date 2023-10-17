@@ -10,6 +10,7 @@ const Home = observer(() => {
     const [isStart, setIsStart] = useState<boolean>(false);
     const [firstNumber, setFirstNumber] = useState<number>(0);
     const [secondNumber, setSecondNumber] = useState<number>(0);
+    const [operation, setOperation] = useState<"+" | "-" | "x" | "÷">("+");
     const [answer, setAnswer] = useState<number>(0);
     const [score, setScore] = useState<number>(-1);
 
@@ -18,23 +19,21 @@ const Home = observer(() => {
     const handleRestartButton = () => {
         setIsStart(false);
         setScore(-1);
-        setAnswer(0);
     };
 
     const handleAnswerChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const userAnswer = Number(e.target.value);
         setAnswer(userAnswer);
 
-        // Start counting down
         if (!isStart && userAnswer === 0) {
             setIsStart(true);
             ConfigStore.handleChooseOperation();
-            startCountdown(2);
+            setOperation(ConfigStore.selectedOperation);
+            startCountdown(ConfigStore.playTimer);
         }
 
-        // Check correct answer every keystroke
         let correctAnswer: number;
-        switch (ConfigStore.selectedOperation) {
+        switch (operation) {
             case "+":
                 correctAnswer = firstNumber + secondNumber;
                 break;
@@ -49,13 +48,17 @@ const Home = observer(() => {
                 break;
         }
 
-        // If correct answer => Generate new question
+        const generateNewNumber = (min: number, max: number) => {
+            return Math.floor(Math.random() * (max - min + 1)) + min;
+        };
+
         if (userAnswer === correctAnswer) {
             ConfigStore.handleChooseOperation();
+            const newOperation = ConfigStore.selectedOperation; // Update the operation first
+            setOperation(newOperation);
             setScore((prevScore) => prevScore + 1);
-
             var newFirstNumber, newSecondNumber;
-            switch (ConfigStore.selectedOperation) {
+            switch (newOperation) {
                 case "+":
                     newFirstNumber = generateNewNumber(10, 99);
                     newSecondNumber = generateNewNumber(10, 99);
@@ -94,7 +97,7 @@ const Home = observer(() => {
                     <p className="text-center text-4xl font-extrabold sm:text-5xl lg:text-6xl">
                         {!isStart
                             ? "Press 0 to start"
-                            : `${firstNumber} ${ConfigStore.selectedOperation} ${secondNumber}`}
+                            : `${firstNumber} ${operation} ${secondNumber}`}
                     </p>
                     <div>
                         <input
@@ -122,9 +125,5 @@ const Home = observer(() => {
         </div>
     );
 });
-
-const generateNewNumber = (min: number, max: number) => {
-    return Math.floor(Math.random() * (max - min + 1)) + min;
-};
 
 export default Home;
