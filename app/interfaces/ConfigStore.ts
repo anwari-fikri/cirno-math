@@ -13,24 +13,24 @@ class ConfigStore {
     difficultyConfig = {
         // for generateNewNumber(min, max)
         "+": {
-            easy: [1, 9],
-            normal: [10, 99],
-            hard: [100, 999],
+            easy: { first: [1, 9], second: [1, 9] },
+            normal: { first: [10, 99], second: [10, 99] },
+            hard: { first: [100, 999], second: [100, 999] },
         },
         "-": {
-            easy: [1, 9],
-            normal: [10, 99],
-            hard: [100, 999],
+            easy: { first: [1, 9], second: [1, 9] },
+            normal: { first: [10, 99], second: [10, 99] },
+            hard: { first: [100, 999], second: [100, 999] },
         },
         "x": {
-            easy: [1, 9],
-            normal: [10, 99],
-            hard: [100, 999],
+            easy: { first: [1, 9], second: [1, 9] },
+            normal: { first: [10, 99], second: [1, 9] },
+            hard: { first: [10, 99], second: [10, 99] },
         },
         "÷": {
-            easy: [1, 9],
-            normal: [10, 99],
-            hard: [100, 999],
+            easy: { first: [1, 9], second: [1, 9] },
+            normal: { first: [5, 20], second: [3, 9] },
+            hard: { first: [5, 50], second: [5, 20] },
         },
     };
 

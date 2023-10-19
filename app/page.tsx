@@ -11,7 +11,7 @@ const Home = observer(() => {
     const [firstNumber, setFirstNumber] = useState<number>(0);
     const [secondNumber, setSecondNumber] = useState<number>(0);
     const [operation, setOperation] = useState<"+" | "-" | "x" | "÷">("+");
-    const [answer, setAnswer] = useState<number>(0);
+    const [answer, setAnswer] = useState<string>("");
     const [score, setScore] = useState<number>(-1);
 
     const { secondsLeft, countdownEnd, startCountdown } = useCountdown();
@@ -23,7 +23,7 @@ const Home = observer(() => {
 
     const handleAnswerChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const userAnswer = Number(e.target.value);
-        setAnswer(userAnswer);
+        setAnswer(e.target.value.replace(/\D/g, ""));
 
         if (!isStart && userAnswer === 0) {
             setIsStart(true);
@@ -50,54 +50,37 @@ const Home = observer(() => {
             setScore((prevScore) => prevScore + 1);
             //
 
-            const difficultyConfig =
+            const first =
                 ConfigStore.difficultyConfig[newOperation][
                     ConfigStore.playDifficulty
-                ];
+                ]["first"];
+
+            const second =
+                ConfigStore.difficultyConfig[newOperation][
+                    ConfigStore.playDifficulty
+                ]["second"];
 
             var newFirstNumber, newSecondNumber;
             switch (newOperation) {
                 case "+":
-                    newFirstNumber = generateNewNumber(
-                        difficultyConfig[0],
-                        difficultyConfig[1]
-                    );
-                    newSecondNumber = generateNewNumber(
-                        difficultyConfig[0],
-                        difficultyConfig[1]
-                    );
+                    newFirstNumber = generateNewNumber(first[0], first[1]);
+                    newSecondNumber = generateNewNumber(second[0], second[1]);
                     break;
                 case "-":
-                    newFirstNumber = generateNewNumber(
-                        difficultyConfig[0],
-                        difficultyConfig[1]
-                    );
+                    newFirstNumber = generateNewNumber(first[0], first[1]);
                     newSecondNumber = generateNewNumber(
-                        difficultyConfig[0],
+                        second[0],
                         newFirstNumber
                     );
                     break;
                 case "x":
-                    newFirstNumber = generateNewNumber(
-                        difficultyConfig[0],
-                        difficultyConfig[1]
-                    );
-                    newSecondNumber = generateNewNumber(
-                        difficultyConfig[0],
-                        difficultyConfig[1]
-                    );
+                    newFirstNumber = generateNewNumber(first[0], first[1]);
+                    newSecondNumber = generateNewNumber(second[0], second[1]);
                     break;
                 case "÷":
-                    newSecondNumber = generateNewNumber(
-                        difficultyConfig[0],
-                        difficultyConfig[1]
-                    );
+                    newSecondNumber = generateNewNumber(second[0], second[1]);
                     newFirstNumber =
-                        newSecondNumber *
-                        generateNewNumber(
-                            difficultyConfig[0],
-                            difficultyConfig[1]
-                        );
+                        newSecondNumber * generateNewNumber(first[0], first[1]);
                     break;
                 default:
                     newFirstNumber = 0;
@@ -107,7 +90,7 @@ const Home = observer(() => {
 
             setFirstNumber(newFirstNumber);
             setSecondNumber(newSecondNumber);
-            setAnswer(0);
+            setAnswer("");
         }
     };
 
