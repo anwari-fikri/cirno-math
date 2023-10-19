@@ -32,21 +32,11 @@ const Home = observer(() => {
             startCountdown(ConfigStore.playTimer);
         }
 
-        let correctAnswer: number;
-        switch (operation) {
-            case "+":
-                correctAnswer = firstNumber + secondNumber;
-                break;
-            case "-":
-                correctAnswer = firstNumber - secondNumber;
-                break;
-            case "x":
-                correctAnswer = firstNumber * secondNumber;
-                break;
-            case "÷":
-                correctAnswer = firstNumber / secondNumber;
-                break;
-        }
+        const correctAnswer = calculateCorrectAnswer(
+            operation,
+            firstNumber,
+            secondNumber
+        );
 
         const generateNewNumber = (min: number, max: number) => {
             return Math.floor(Math.random() * (max - min + 1)) + min;
@@ -54,26 +44,60 @@ const Home = observer(() => {
 
         if (userAnswer === correctAnswer) {
             ConfigStore.handleChooseOperation();
-            const newOperation = ConfigStore.selectedOperation; // Update the operation first
+            // must do this or else division won't work IDK WHY
+            const newOperation = ConfigStore.selectedOperation;
             setOperation(newOperation);
             setScore((prevScore) => prevScore + 1);
+            //
+
+            const difficultyConfig =
+                ConfigStore.difficultyConfig[newOperation][
+                    ConfigStore.playDifficulty
+                ];
+
             var newFirstNumber, newSecondNumber;
             switch (newOperation) {
                 case "+":
-                    newFirstNumber = generateNewNumber(10, 99);
-                    newSecondNumber = generateNewNumber(10, 99);
+                    newFirstNumber = generateNewNumber(
+                        difficultyConfig[0],
+                        difficultyConfig[1]
+                    );
+                    newSecondNumber = generateNewNumber(
+                        difficultyConfig[0],
+                        difficultyConfig[1]
+                    );
                     break;
                 case "-":
-                    newFirstNumber = generateNewNumber(10, 99);
-                    newSecondNumber = generateNewNumber(10, newFirstNumber);
+                    newFirstNumber = generateNewNumber(
+                        difficultyConfig[0],
+                        difficultyConfig[1]
+                    );
+                    newSecondNumber = generateNewNumber(
+                        difficultyConfig[0],
+                        newFirstNumber
+                    );
                     break;
                 case "x":
-                    newFirstNumber = generateNewNumber(10, 99);
-                    newSecondNumber = generateNewNumber(1, 9);
+                    newFirstNumber = generateNewNumber(
+                        difficultyConfig[0],
+                        difficultyConfig[1]
+                    );
+                    newSecondNumber = generateNewNumber(
+                        difficultyConfig[0],
+                        difficultyConfig[1]
+                    );
                     break;
                 case "÷":
-                    newSecondNumber = generateNewNumber(1, 9);
-                    newFirstNumber = newSecondNumber * generateNewNumber(1, 99);
+                    newSecondNumber = generateNewNumber(
+                        difficultyConfig[0],
+                        difficultyConfig[1]
+                    );
+                    newFirstNumber =
+                        newSecondNumber *
+                        generateNewNumber(
+                            difficultyConfig[0],
+                            difficultyConfig[1]
+                        );
                     break;
                 default:
                     newFirstNumber = 0;
@@ -125,5 +149,24 @@ const Home = observer(() => {
         </div>
     );
 });
+
+const calculateCorrectAnswer = (
+    operation: "+" | "-" | "x" | "÷",
+    firstNumber: number,
+    secondNumber: number
+): number => {
+    switch (operation) {
+        case "+":
+            return firstNumber + secondNumber;
+        case "-":
+            return firstNumber - secondNumber;
+        case "x":
+            return firstNumber * secondNumber;
+        case "÷":
+            return firstNumber / secondNumber;
+        default:
+            return 0;
+    }
+};
 
 export default Home;

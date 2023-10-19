@@ -9,6 +9,30 @@ class ConfigStore {
     isDivision: boolean = false;
 
     playTimer: 30 | 60 | 120 = 30; // seconds
+    playDifficulty: "easy" | "normal" | "hard" = "easy";
+    difficultyConfig = {
+        // for generateNewNumber(min, max)
+        "+": {
+            easy: [1, 9],
+            normal: [10, 99],
+            hard: [100, 999],
+        },
+        "-": {
+            easy: [1, 9],
+            normal: [10, 99],
+            hard: [100, 999],
+        },
+        "x": {
+            easy: [1, 9],
+            normal: [10, 99],
+            hard: [100, 999],
+        },
+        "÷": {
+            easy: [1, 9],
+            normal: [10, 99],
+            hard: [100, 999],
+        },
+    };
 
     constructor() {
         makeObservable(this, {
@@ -22,7 +46,14 @@ class ConfigStore {
 
             playTimer: observable,
             handleSetPlayTimer: action,
+
+            playDifficulty: observable,
+            difficultyConfig: observable,
         });
+    }
+
+    handleSetPlayDifficulty(input: "easy" | "normal" | "hard") {
+        this.playDifficulty = input;
     }
 
     handleChooseOperation = () => {
